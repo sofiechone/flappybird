@@ -11,7 +11,7 @@ let frames = 0;
 const sprite = new Image();
 sprite.src = "img/sprite.png"; // .src is the image location
 
-// GAME STATE
+// GAME STATEs
 const state = {
   current: 0,
   getReady: 0,
@@ -117,7 +117,12 @@ const bird = {
     } else {
       this.speed += this.gravity;
       this.y += this.speed;
-
+      if (this.y + this.h / 2 >= cvs.height - fg.h) {
+        this.y = cvs.height - fg.h - this.h / 2;
+        if (state.current == state.game) {
+          state.current == state.over
+        }
+      }
     }
 
   },

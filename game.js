@@ -101,7 +101,7 @@ const bird = {
 
   gravity: 0.25,
   jump: 4.6,
-  speed: 0,
+  speed: 0.5,
   rotation: 0,
 
   draw: function () {
@@ -226,27 +226,56 @@ const pipes = {
     for (let i = 0; i < this.position.length; i++) {
       let p = this.position[i];
 
-      p.x -= this.dx;
-      let bottomPipeYPos = p.x + this.h + this.gap;
+
+      let bottomPipeYPos = p.y + this.h + this.gap;
       //COLLISION DETECTION 
       //TOP PIPE
       if (bird.x + bird.radius > p.x && bird.x - bird.radius < p.x + this.w && bird.y + bird.radius > p.y && bird.y - bird.radius < p.y + this.h) {
         state.current = state.over;
       }
       //BOTTOM PIPE 
-      if (bird.x + bird.radius > p.x && bird.x - bird.radius < p.x + this.w && bird.y + bird.radius > p.y && bird.y - bird.radius < p.y + this.h) {
+      if (bird.x + bird.radius > p.x && bird.x - bird.radius < p.x + this.w && bird.y + bird.radius > bottomPipeYPos && bird.y - bird.radius < bottomPipeYPos + this.h) {
         state.current = state.over;
-        //IF THE PIPE GOES BEYOND CANVAS DELETE PIPE
-        if (p.x + this.w <= 0) {
-          this.position.shift();
-        }
+      }
+      //MOVE THE PIPES TO THE LEFT
+      p.x -= this.dx;
+      //IF THE PIPE GOES BEYOND CANVAS DELETE PIPE
+      if (p.x + this.w <= 0) {
+        this.position.shift();
       }
     }
   }
+}
 
+
+// SCORE
+const score = {
+  best: parseInt(localStorage.getItem("best")) || 0,
+  value: 0,
+
+  draw: function () {
+    ctx.fillStyle = "#FFF";
+    ctx.strokeStyle = "#000";
+    if (state.current == state.game) {
+      ctx.lineWidth = 2;
+      ctx.font = "35px Teko"
+      ctx.fillText(this.value, cvs.width / 2, 50);
+      ctx.strokeText(this.value, cvs.width / 2, 50);
+    } else if (state.current == state.over) {
+      //SCORE VALUE 
+      ctx.font = "25px Teko"
+      ctx.fillText(this.value, 225 / 186);
+      ctx.strokeText(this.value, 225 / 186);
+      //BEST SCORE
+      ctx.font = "25px Teko"
+      ctx.fillText(this.value, / 2, 50);
+      ctx.strokeText(this.value, / 2, 50);
+    }
+  },
 
 
 }
+
 
 // DRAW
 function draw() {
